@@ -4,15 +4,16 @@ A collection of progressive Terraform projects demonstrating AWS infrastructure 
 
 ## 📚 Projects Overview
 
-This repository contains five Terraform projects, each building upon the previous one in complexity and best practices:
+This repository contains six Terraform projects, each building upon the previous one in complexity and best practices:
 
 | Project | Level | State Management | Infrastructure | Use Case |
 |---------|-------|------------------|----------------|----------|
 | [first-ec2-example](#1-first-ec2-example) | Beginner | Local | Default VPC | Learning basics |
 | [ec2-project](#2-ec2-project) | Intermediate | Local | User-provided | Modular approach |
-| [ec2-project-s3-backend](#3-ec2-project-s3-backend) | Advanced | S3 | User-provided | Team collaboration |
-| [multi-instance-modules](#4-multi-instance-modules) | Advanced | Local | User-provided | Module reusability |
-| [complete-infrastructure](#5-complete-infrastructure) | Production | S3 | Creates all | Full automation |
+| [ec2-project-with-userdata](#3-ec2-project-with-userdata) | Intermediate | Local | User-provided | EC2 with user data |
+| [ec2-project-s3-backend](#4-ec2-project-s3-backend) | Advanced | S3 | User-provided | Team collaboration |
+| [multi-instance-modules](#5-multi-instance-modules) | Advanced | Local | User-provided | Module reusability |
+| [complete-infrastructure](#6-complete-infrastructure) | Production | S3 | Creates all | Full automation |
 
 ---
 
@@ -83,7 +84,41 @@ terraform apply
 
 ---
 
-## 3. ec2-project-s3-backend
+## 3. ec2-project-with-userdata
+
+**🎯 Purpose:** Production-ready EC2 deployment with user data script for automated instance configuration
+
+### What You'll Learn
+- User data scripts for instance initialization
+- Automated software installation on boot
+- Web server configuration
+- All benefits from ec2-project
+
+### Features
+- ✅ All features from ec2-project
+- ✅ User data script support
+- ✅ Automated Apache installation and configuration
+- ✅ Custom startup scripts
+- ✅ Instance bootstrap automation
+
+### Quick Start
+```bash
+cd ec2-project-with-userdata
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars and user-data.sh as needed
+terraform init
+terraform apply
+```
+
+### Best For
+- Instances requiring automated configuration
+- Web servers needing automatic setup
+- Standardized instance deployment
+- DevOps automation workflows
+
+---
+
+## 4. ec2-project-s3-backend
 
 **🎯 Purpose:** Team collaboration with remote state management
 
@@ -123,7 +158,47 @@ terraform apply
 
 ---
 
-## 4. multi-instance-modules
+## 4. ec2-project-s3-backend
+
+**🎯 Purpose:** Team collaboration with remote state management
+
+### What You'll Learn
+- S3 backend configuration
+- Remote state management
+- State versioning and encryption
+- Team collaboration workflows
+- Optional DynamoDB state locking
+
+### Features
+- ✅ Same EC2 module as ec2-project
+- ✅ S3 backend for state storage
+- ✅ State encryption and versioning
+- ✅ Requires existing VPC, Subnet, Security Group
+- ✅ AWS named profiles
+- ✅ Team-ready infrastructure
+- ⚠️ State locking optional (requires DynamoDB)
+
+### Quick Start
+```bash
+# Create S3 bucket first
+aws s3 mb s3://your-state-bucket --region us-west-2
+
+cd ec2-project-s3-backend
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars and main.tf backend config
+terraform init
+terraform apply
+```
+
+### Best For
+- Team environments
+- Multiple developers collaborating
+- Production deployments
+- Organizations requiring state audit trails
+
+---
+
+## 5. multi-instance-modules
 
 **🎯 Purpose:** Demonstrate module reusability by deploying multiple instances
 
@@ -173,7 +248,7 @@ Bastion Host (t2.micro)  → Public Subnet  → SSH Gateway
 
 ---
 
-## 5. complete-infrastructure
+## 6. complete-infrastructure
 
 **🎯 Purpose:** Full AWS infrastructure automation from scratch
 
@@ -190,13 +265,7 @@ Bastion Host (t2.micro)  → Public Subnet  → SSH Gateway
   - VPC with custom CIDR
   - Public subnet with Internet Gateway
   - Route tables
-  - SPractice with `multi-instance-modules`**
-   - Master module reusability
-   - Deploy multi-tier architecture
-   - Understand real-world patterns
-   - Learn network segmentation
-
-5. **ecurity Group (SSH, HTTP, HTTPS)
+  - Security Group (SSH, HTTP, HTTPS)
   - EC2 instance with Apache
 - ✅ S3 backend for state
 - ✅ AWS named profiles
@@ -241,12 +310,23 @@ terraform apply
    - Use secure authentication (named profiles)
    - Work with existing infrastructure
 
-3. **Advance to `ec2-project-s3-backend`**
+3. **Practice with `ec2-project-with-userdata`**
+   - Add instance automation
+   - Learn user data scripts
+   - Automate instance configuration
+
+4. **Advance to `ec2-project-s3-backend`**
    - Implement remote state
    - Understand team collaboration
    - Learn state management best practices
 
-4. **Master `complete-infrastructure`**
+5. **Practice with `multi-instance-modules`**
+   - Master module reusability
+   - Deploy multi-tier architecture
+   - Understand real-world patterns
+   - Learn network segmentation
+
+6. **Master `complete-infrastructure`**
    - Create full infrastructure from scratch
    - Combine all concepts
    - Build production-ready systems
@@ -261,44 +341,46 @@ terraform apply
 - Basic command line knowledge
 
 ### Project-Specific
-multi-instance-modules | Same as ec2-project, Public+Private Subnets, 4 SGs |
-| 
+
 | Project | Additional Requirements |
 |---------|------------------------|
 | first-ec2-example | AWS Access/Secret Keys |
 | ec2-project | AWS CLI, Named Profile, Existing VPC/Subnet/SG |
+| ec2-project-with-userdata | Same as ec2-project |
 | ec2-project-s3-backend | S3 Bucket, Same as ec2-project |
+| multi-instance-modules | Same as ec2-project, Public+Private Subnets, 4 SGs |
 | complete-infrastructure | S3 Bucket, Existing Key Pair |
 
 ---
 
-##multi-instance-modules | Named Profile | Local | ✅ Good |
-|  🔐 Security Comparison
+## 🔐 Security Comparison
 
 | Project | Authentication | State Storage | Security Level |
 |---------|---------------|---------------|----------------|
 | first-ec2-example | Hardcoded | Local | ❌ Learning only |
-| ec2-project | Named Profile | Local | ✅ Good |multi-instance | complete-infra |
-|-----------|-----------|-------------|----------------|----------------|----------------|
-| VPC | Default | User-provided | User-provided | User-provided | ✅ Created |
-| Subnet | Default | User-provided | User-provided | Public+Private | ✅ Created |
-| Internet Gateway | Default | Existing | Existing | Existing | ✅ Created |
-| Route Table | Default | Existing | Existing | Existing | ✅ Created |
-| Security Group | Default | User-provided | User-provided | 4 Different SGs | ✅ Created |
-| EC2 Instances | 1 | 1 | 1 | **4 (Multi-tier)** | 1 |
-| Web Server | ❌ | ❌ | ❌ | ✅ Apache | ✅ Apache |
-| App Server | ❌ | ❌ | ❌ | ✅ Java | ❌ |
-| DB Server | ❌ | ❌ | ❌ | ✅ Database | ❌ |
-| Bastion Host | ❌ | ❌ | ❌ | ✅ SSH Gateway | ❌ |
-| Module Reuse | ❌ | ✅ Single | ✅ Single | **✅ Multiple** | ✅ Multiplect | ec2-s3-backend | complete-infra |
-|-----------|-----------|-------------|----------------|----------------|
-| VPC | Default | User-provided | User-provided | ✅ Created |
-| Subnet | Default | User-provided | User-provided | ✅ Created |
-| Internet Gateway | Default | Existing | Existing | ✅ Created |
-| Route Table | Default | Existing | Existing | ✅ Created |
-| Security Group | Default | User-provided | User-provided | ✅ Created |
-| EC2 Instance | ✅ | ✅ | ✅ | ✅ |
-| Web Server | ❌ | ❌ | ❌ | ✅ Apache |
+| ec2-project | Named Profile | Local | ✅ Good |
+| ec2-project-with-userdata | Named Profile | Local | ✅ Good |
+| ec2-project-s3-backend | Named Profile | S3 | ✅✅ Better |
+| multi-instance-modules | Named Profile | Local | ✅ Good |
+| complete-infrastructure | Named Profile | S3 | ✅✅✅ Best |
+
+---
+
+## 🏗️ Infrastructure Comparison
+
+| Component | first-ec2 | ec2-project | ec2-userdata | ec2-s3-backend | multi-instance | complete-infra |
+|-----------|-----------|-------------|--------------|----------------|----------------|----------------|
+| VPC | Default | User-provided | User-provided | User-provided | User-provided | ✅ Created |
+| Subnet | Default | User-provided | User-provided | User-provided | Public+Private | ✅ Created |
+| Internet Gateway | Default | Existing | Existing | Existing | Existing | ✅ Created |
+| Route Table | Default | Existing | Existing | Existing | Existing | ✅ Created |
+| Security Group | Default | User-provided | User-provided | User-provided | 4 Different SGs | ✅ Created |
+| EC2 Instances | 1 | 1 | 1 | 1 | **4 (Multi-tier)** | 1 |
+| Web Server | ❌ | ❌ | ✅ Apache | ❌ | ✅ Apache | ✅ Apache |
+| App Server | ❌ | ❌ | ❌ | ❌ | ✅ Java | ❌ |
+| DB Server | ❌ | ❌ | ❌ | ❌ | ✅ Database | ❌ |
+| Bastion Host | ❌ | ❌ | ❌ | ❌ | ✅ SSH Gateway | ❌ |
+| Module Reuse | ❌ | ✅ Single | ✅ Single | ✅ Single | **✅ Multiple** | ✅ Multiple |
 
 ---
 
@@ -317,8 +399,21 @@ terraform-basics/
 │   ├── variables.tf
 │   ├── outputs.tf
 │   ├── terraform.tfvars.example
-├── multi-instance-modules/
-│   ├── README.md                    # Module reusability demo
+│   ├── .gitignore
+│   └── modules/
+│       └── ec2/
+├── ec2-project-with-userdata/
+│   ├── README.md                    # User data & automation
+│   ├── main.tf
+│   ├── variables.tf
+│   ├── outputs.tf
+│   ├── user-data.sh                 # Bootstrap script
+│   ├── terraform.tfvars.example
+│   ├── .gitignore
+│   └── modules/
+│       └── ec2/
+├── ec2-project-s3-backend/
+│   ├── README.md                    # S3 backend & collaboration
 │   ├── main.tf
 │   ├── variables.tf
 │   ├── outputs.tf
@@ -326,11 +421,8 @@ terraform-basics/
 │   ├── .gitignore
 │   └── modules/
 │       └── ec2/
-│   ├── .gitignore
-│   └── modules/
-│       └── ec2/
-├── ec2-project-s3-backend/
-│   ├── README.md                    # S3 backend & collaboration
+├── multi-instance-modules/
+│   ├── README.md                    # Module reusability demo
 │   ├── main.tf
 │   ├── variables.tf
 │   ├── outputs.tf
