@@ -8,8 +8,8 @@ terraform {
   }
 
   backend "s3" {
-    bucket  = "your-terraform-state-bucket"  # Replace with your S3 bucket name
-    key     = "ec2-project/terraform.tfstate"
+    bucket  = "batch-08-tf-state"  # Replace with your S3 bucket name
+    key     = "check-s3-backend/terraform.tfstate"
     region  = "us-west-2"
     encrypt = true
     profile = "sarowar-ostad"  # Replace with your AWS profile
